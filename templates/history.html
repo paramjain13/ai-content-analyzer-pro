@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Analysis History - AI Content Analyzer</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/dark-mode.css') }}">
+<style>
+body{
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 40px;
+    margin: 0;
+    min-height: 100vh;
+    transition: background 0.3s;
+}
+.container{
+    max-width: 1400px;
+    margin: auto;
+    background: #fff;
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    transition: background 0.3s, color 0.3s;
+}
+.header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid #f0f0f0;
+}
+h1{
+    color: #333;
+    margin: 0;
+    font-size: 32px;
+}
+.user-info{
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+.user-avatar{
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+}
+.nav-links{
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+.btn{
+    padding: 10px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+    transition: all 0.3s;
+    border: none;
+    cursor: pointer;
+    display: inline-block;
+}
+.btn-primary{
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+.btn-primary:hover{
+    opacity: 0.9;
+    transform: translateY(-2px);
+}
+.btn-secondary{
+    background: #f0f0f0;
+    color: #333;
+}
+.btn-secondary:hover{
+    background: #e0e0e0;
+}
+.btn-danger{
+    background: #e74c3c;
+    color: white;
+    font-size: 12px;
+    padding: 8px 14px;
+}
+.btn-danger:hover{
+    background: #c0392b;
+}
+.btn-small{
+    padding: 8px 14px;
+    font-size: 13px;
+}
+.alert{
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-size: 14px;
+    animation: slideIn 0.3s ease-out;
+}
+.alert-success{
+    background: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+.alert-error{
+    background: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+.stats-grid{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+.stat-card{
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    transition: transform 0.3s;
+}
+.stat-card:hover{
+    transform: translateY(-4px);
+}
+.stat-number{
+    font-size: 36px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+.stat-label{
+    font-size: 14px;
+    opacity: 0.9;
+}
+.filters-section{
+    background: #f9f9fb;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+    transition: background 0.3s;
+}
+.filters-grid{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin-top: 15px;
+}
+.filter-group{
+    display: flex;
+    flex-direction: column;
+}
+.filter-group label{
+    font-size: 13px;
+    font-weight: 600;
+    color: #555;
+    margin-bottom: 5px;
+}
+.filter-group select, .filter-group input{
+    padding: 8px 12px;
+    border: 2px solid #ddd;
+    border-radius: 6px;
+    font-size: 13px;
+    transition: all 0.3s;
+}
+.filter-group select:focus, .filter-group input:focus{
+    border-color: #667eea;
+    outline: none;
+}
+.history-list{
+    margin-top: 20px;
+}
+.history-item{
+    background: #f9f9fb;
+    padding: 20px;
+    margin-bottom: 15px;
+    border-radius: 10px;
+    border-left: 4px solid #667eea;
+    transition: all 0.3s;
+    animation: fadeIn 0.5s ease-in;
+}
+.history-item:hover{
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    transform: translateY(-2px);
+}
+.history-item.favorite{
+    border-left-color: #f39c12;
+    background: #fffbf0;
+}
+.history-header{
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    margin-bottom: 15px;
+    gap: 15px;
+}
+.history-title-section{
+    flex: 1;
+}
+.history-title{
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+.favorite-btn{
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    transition: transform 0.2s;
+    padding: 0;
+    line-height: 1;
+}
+.favorite-btn:hover{
+    transform: scale(1.3);
+}
+.history-meta{
+    display: flex;
+    gap: 20px;
+    font-size: 13px;
+    color: #666;
+    flex-wrap: wrap;
+}
+.meta-item{
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+.history-tags{
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-top: 10px;
+}
+.tag{
+    background: #e8f0ff;
+    color: #667eea;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    transition: all 0.3s;
+}
+.tag:hover{
+    transform: scale(1.05);
+}
+.collection-badge{
+    background: #e8f5e9;
+    color: #2e7d32;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+}
+.history-actions{
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+    flex-wrap: wrap;
+}
+.source-badge{
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+.source-website{
+    background: #e3f2fd;
+    color: #1565c0;
+}
+.source-pdf{
+    background: #ffebee;
+    color: #c62828;
+}
+.source-docx{
+    background: #e8f5e9;
+    color: #2e7d32;
+}
+.source-pptx{
+    background: #fff3e0;
+    color: #e65100;
+}
+.source-xlsx{
+    background: #e0f2f1;
+    color: #00695c;
+}
+.source-image{
+    background: #f3e5f5;
+    color: #7b1fa2;
+}
+.empty-state{
+    text-align: center;
+    padding: 60px 20px;
+    color: #999;
+}
+.empty-icon{
+    font-size: 64px;
+    margin-bottom: 20px;
+}
+.pagination{
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 30px;
+    flex-wrap: wrap;
+}
+.pagination a{
+    padding: 8px 16px;
+    border: 2px solid #667eea;
+    border-radius: 6px;
+    text-decoration: none;
+    color: #667eea;
+    font-weight: 600;
+    transition: all 0.3s;
+}
+.pagination a:hover{
+    background: #667eea;
+    color: white;
+    transform: translateY(-2px);
+}
+.pagination .active{
+    background: #667eea;
+    color: white;
+}
+.dropdown{
+    position: relative;
+    display: inline-block;
+}
+.dropdown-content{
+    display: none;
+    position: absolute;
+    background: white;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    border-radius: 8px;
+    margin-top: 5px;
+    z-index: 100;
+    min-width: 150px;
+    right: 0;
+}
+.dropdown-content a{
+    display: block;
+    padding: 10px 15px;
+    color: #333;
+    text-decoration: none;
+    border-bottom: 1px solid #f0f0f0;
+    transition: background 0.3s;
+}
+.dropdown-content a:hover{
+    background: #f9f9fb;
+}
+.dropdown-content a:last-child{
+    border-bottom: none;
+}
+.modal{
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    animation: fadeIn 0.3s;
+}
+.modal-content{
+    background: white;
+    margin: 10% auto;
+    padding: 30px;
+    border-radius: 15px;
+    max-width: 500px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+    animation: slideIn 0.3s ease-out;
+    transition: background 0.3s, color 0.3s;
+}
+.modal-header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+.modal-header h2{
+    margin: 0;
+    color: #333;
+}
+.close-btn{
+    background: none;
+    border: none;
+    font-size: 28px;
+    cursor: pointer;
+    color: #999;
+    transition: color 0.3s;
+}
+.close-btn:hover{
+    color: #333;
+}
+.form-group{
+    margin-bottom: 20px;
+}
+.form-group label{
+    display: block;
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: #555;
+}
+.form-group input, .form-group textarea, .form-group select{
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-size: 14px;
+    box-sizing: border-box;
+    transition: all 0.3s;
+}
+.form-group input:focus, .form-group textarea:focus, .form-group select:focus{
+    border-color: #667eea;
+    outline: none;
+}
+textarea{
+    min-height: 80px;
+    resize: vertical;
+}
+.dark-mode-toggle{
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    color: white;
+    font-size: 28px;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    transition: transform 0.3s;
+    z-index: 1000;
+}
+.dark-mode-toggle:hover{
+    transform: scale(1.1);
+}
+@keyframes fadeIn{
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+@keyframes slideIn{
+    from { transform: translateY(-50px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+@media (max-width: 768px){
+    body{
+        padding: 20px;
+    }
+    .container{
+        padding: 20px;
+    }
+    .header{
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+    }
+    .stats-grid{
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .filters-grid{
+        grid-template-columns: 1fr;
+    }
+    .history-header{
+        flex-direction: column;
+    }
+    .history-actions{
+        width: 100%;
+        justify-content: flex-start;
+    }
+}
+</style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>📚 Analysis History</h1>
+        <div class="user-info">
+            <div class="user-avatar">{{ current_user.username[0].upper() }}</div>
+            <div>
+                <div style="font-weight: 600; color: #333;">{{ current_user.username }}</div>
+                <div style="font-size: 12px; color: #666;">{{ current_user.email }}</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="nav-links" style="margin-bottom: 30px;">
+        <a href="{{ url_for('home') }}" class="btn btn-primary">➕ New Analysis</a>
+        <a href="{{ url_for('batch') }}" class="btn btn-secondary">🔄 Batch</a>
+        <a href="{{ url_for('collections') }}" class="btn btn-secondary">📂 Collections</a>
+        <a href="{{ url_for('logout') }}" class="btn btn-secondary">Logout</a>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-number">{{ analyses.total }}</div>
+            <div class="stat-label">Total Analyses</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">{{ current_user.analyses|selectattr('is_favorite')|list|length }}</div>
+            <div class="stat-label">Favorites</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">{{ current_user.collections|length }}</div>
+            <div class="stat-label">Collections</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">{{ analyses.pages }}</div>
+            <div class="stat-label">Pages</div>
+        </div>
+    </div>
+
+    <!-- Filters Section -->
+    <div class="filters-section">
+        <h3 style="margin-top: 0; color: #667eea;">🔍 Filters & Search</h3>
+        <form method="get" action="{{ url_for('history') }}">
+            <div class="filters-grid">
+                <div class="filter-group">
+                    <label>Search</label>
+                    <input type="text" name="search" placeholder="Search by title..." value="{{ request.args.get('search', '') }}">
+                </div>
+                
+                <div class="filter-group">
+                    <label>Source Type</label>
+                    <select name="source_type">
+                        <option value="">All Types</option>
+                        <option value="website" {% if request.args.get('source_type') == 'website' %}selected{% endif %}>Website</option>
+                        <option value="pdf" {% if request.args.get('source_type') == 'pdf' %}selected{% endif %}>PDF</option>
+                        <option value="docx" {% if request.args.get('source_type') == 'docx' %}selected{% endif %}>Word</option>
+                        <option value="pptx" {% if request.args.get('source_type') == 'pptx' %}selected{% endif %}>PowerPoint</option>
+                        <option value="xlsx" {% if request.args.get('source_type') == 'xlsx' %}selected{% endif %}>Excel</option>
+                        <option value="image" {% if request.args.get('source_type') == 'image' %}selected{% endif %}>Image</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label>Collection</label>
+                    <select name="collection">
+                        <option value="">All Collections</option>
+                        {% for col in current_user.collections %}
+                        <option value="{{ col.id }}" {% if request.args.get('collection') == col.id|string %}selected{% endif %}>{{ col.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label>Show</label>
+                    <select name="favorites">
+                        <option value="">All</option>
+                        <option value="true" {% if request.args.get('favorites') == 'true' %}selected{% endif %}>⭐ Favorites Only</option>
+                    </select>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary" style="margin-top: 15px;">Apply Filters</button>
+            <a href="{{ url_for('history') }}" class="btn btn-secondary" style="margin-top: 15px;">Clear Filters</a>
+        </form>
+    </div>
+
+    <div class="history-list">
+        {% if analyses.items %}
+            {% for analysis in analyses.items %}
+            <div class="history-item {% if analysis.is_favorite %}favorite{% endif %}">
+                <div class="history-header">
+                    <div class="history-title-section">
+                        <div class="history-title">
+                            <button class="favorite-btn" onclick="toggleFavorite({{ analysis.id }}, this)">
+                                {% if analysis.is_favorite %}⭐{% else %}☆{% endif %}
+                            </button>
+                            <span class="source-badge source-{{ analysis.source_type }}">{{ analysis.source_type }}</span>
+                            {{ analysis.title }}
+                        </div>
+                        <div class="history-meta">
+                            <div class="meta-item">
+                                <span>📅</span>
+                                <span>{{ analysis.created_at.strftime('%b %d, %Y at %I:%M %p') }}</span>
+                            </div>
+                            <div class="meta-item">
+                                <span>📝</span>
+                                <span>{{ analysis.word_count }} words</span>
+                            </div>
+                            <div class="meta-item">
+                                <span>⏱️</span>
+                                <span>{{ analysis.reading_time }}</span>
+                            </div>
+                            <div class="meta-item">
+                                <span>🎨</span>
+                                <span>{{ analysis.summary_format|upper }}</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Tags and Collection -->
+                        <div class="history-tags">
+                            {% if analysis.collection %}
+                            <span class="collection-badge">📂 {{ analysis.collection.name }}</span>
+                            {% endif %}
+                            
+                            {% for tag in analysis.get_tags_list() %}
+                            <span class="tag"># {{ tag }}</span>
+                            {% endfor %}
+                        </div>
+                        
+                        {% if analysis.notes %}
+                        <div style="margin-top: 10px; padding: 10px; background: white; border-radius: 6px; font-size: 13px; color: #666;">
+                            📝 {{ analysis.notes }}
+                        </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="history-actions">
+                        <a href="{{ url_for('view_analysis', analysis_id=analysis.id) }}" class="btn btn-primary btn-small">View</a>
+                        
+                        <button class="btn btn-secondary btn-small" onclick="openEditModal({{ analysis.id }}, '{{ analysis.tags or '' }}', '{{ analysis.notes or '' }}', {{ analysis.collection_id or 'null' }})">
+                            ✏️ Edit
+                        </button>
+                        
+                        <div class="dropdown">
+                            <button class="btn btn-secondary btn-small" onclick="toggleExportMenu({{ analysis.id }})">
+                                📥 Export ▾
+                            </button>
+                            <div id="export-menu-{{ analysis.id }}" class="dropdown-content">
+                                <a href="{{ url_for('export_analysis', analysis_id=analysis.id, format='pdf') }}">📄 PDF</a>
+                                <a href="{{ url_for('export_analysis', analysis_id=analysis.id, format='docx') }}">📝 Word</a>
+                                <a href="{{ url_for('export_analysis', analysis_id=analysis.id, format='markdown') }}">📋 Markdown</a>
+                                <a href="{{ url_for('export_analysis', analysis_id=analysis.id, format='json') }}">{ } JSON</a>
+                            </div>
+                        </div>
+                        
+                        <form method="post" action="{{ url_for('delete_analysis', analysis_id=analysis.id) }}" style="display: inline;" 
+                              onsubmit="return confirm('Are you sure you want to delete this analysis?');">
+                            <button type="submit" class="btn btn-danger btn-small">Delete</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="empty-state">
+                <div class="empty-icon">📭</div>
+                <h3>No Analysis History Yet</h3>
+                <p>Start analyzing content to see your history here</p>
+                <a href="{{ url_for('home') }}" class="btn btn-primary" style="margin-top: 20px;">
+                    Create Your First Analysis
+                </a>
+            </div>
+        {% endif %}
+    </div>
+
+    {% if analyses.pages > 1 %}
+    <div class="pagination">
+        {% if analyses.has_prev %}
+            <a href="{{ url_for('history', page=analyses.prev_num, search=request.args.get('search', ''), source_type=request.args.get('source_type', ''), collection=request.args.get('collection', ''), favorites=request.args.get('favorites', '')) }}">← Previous</a>
+        {% endif %}
+        
+        {% for page_num in analyses.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+            {% if page_num %}
+                <a href="{{ url_for('history', page=page_num, search=request.args.get('search', ''), source_type=request.args.get('source_type', ''), collection=request.args.get('collection', ''), favorites=request.args.get('favorites', '')) }}" class="{% if page_num == analyses.page %}active{% endif %}">
+                    {{ page_num }}
+                </a>
+            {% else %}
+                <span>...</span>
+            {% endif %}
+        {% endfor %}
+        
+        {% if analyses.has_next %}
+            <a href="{{ url_for('history', page=analyses.next_num, search=request.args.get('search', ''), source_type=request.args.get('source_type', ''), collection=request.args.get('collection', ''), favorites=request.args.get('favorites', '')) }}">Next →</a>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+
+<!-- Edit Modal -->
+<div id="editModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>✏️ Edit Analysis</h2>
+            <button class="close-btn" onclick="closeEditModal()">&times;</button>
+        </div>
+        
+        <form method="post" id="editForm">
+            <div class="form-group">
+                <label>Tags (comma-separated)</label>
+                <input type="text" name="tags" id="editTags" placeholder="tech, ai, research">
+            </div>
+            
+            <div class="form-group">
+                <label>Notes</label>
+                <textarea name="notes" id="editNotes" placeholder="Add personal notes..."></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label>Collection</label>
+                <select name="collection_id" id="editCollection">
+                    <option value="none">No Collection</option>
+                    {% for col in current_user.collections %}
+                    <option value="{{ col.id }}">{{ col.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <button type="submit" class="btn btn-primary" style="width: 100%;">Save Changes</button>
+        </form>
+    </div>
+</div>
+
+<button class="dark-mode-toggle" onclick="toggleDarkMode()">
+    <span id="darkModeIcon">🌙</span>
+</button>
+
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+<script>
+function toggleExportMenu(analysisId) {
+    const menu = document.getElementById('export-menu-' + analysisId);
+    document.querySelectorAll('[id^="export-menu-"]').forEach(m => {
+        if (m.id !== 'export-menu-' + analysisId) {
+            m.style.display = 'none';
+        }
+    });
+    menu.style.display = menu.style.display === 'none' || menu.style.display === '' ? 'block' : 'none';
+}
+
+document.addEventListener('click', function(event) {
+    if (!event.target.closest('.dropdown')) {
+        document.querySelectorAll('[id^="export-menu-"]').forEach(m => {
+            m.style.display = 'none';
+        });
+    }
+});
+
+async function toggleFavorite(analysisId, button) {
+    try {
+        const response = await fetch(`/analysis/${analysisId}/toggle-favorite`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            button.textContent = data.is_favorite ? '⭐' : '☆';
+            button.closest('.history-item').classList.toggle('favorite', data.is_favorite);
+        }
+    } catch (error) {
+        console.error('Error toggling favorite:', error);
+    }
+}
+
+function openEditModal(analysisId, tags, notes, collectionId) {
+    const modal = document.getElementById('editModal');
+    const form = document.getElementById('editForm');
+    
+    form.action = `/analysis/${analysisId}/update`;
+    document.getElementById('editTags').value = tags;
+    document.getElementById('editNotes').value = notes;
+    document.getElementById('editCollection').value = collectionId || 'none';
+    
+    modal.style.display = 'block';
+}
+
+function closeEditModal() {
+    document.getElementById('editModal').style.display = 'none';
+}
+
+window.onclick = function(event) {
+    const modal = document.getElementById('editModal');
+    if (event.target == modal) {
+        modal.style.display = 'none';
+    }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Batch Processing - AI Content Analyzer</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/dark-mode.css') }}">
+<style>
+body{
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 40px;
+    margin: 0;
+    min-height: 100vh;
+    transition: background 0.3s;
+}
+.container{
+    max-width: 1400px;
+    margin: auto;
+    background: #fff;
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    transition: background 0.3s, color 0.3s;
+}
+.header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid #f0f0f0;
+}
+h1{
+    color: #333;
+    margin: 0;
+}
+h2{
+    color: #333;
+    margin: 0;
+}
+.nav-links{
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+.btn{
+    padding: 10px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+    transition: all 0.3s;
+    border: none;
+    cursor: pointer;
+    display: inline-block;
+}
+.btn-primary{
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+.btn-primary:hover{
+    opacity: 0.9;
+    transform: translateY(-2px);
+}
+.btn-secondary{
+    background: #f0f0f0;
+    color: #333;
+}
+.btn-secondary:hover{
+    background: #e0e0e0;
+}
+.tabs{
+    display: flex;
+    gap: 10px;
+    margin-bottom: 30px;
+    border-bottom: 2px solid #f0f0f0;
+}
+.tab{
+    padding: 12px 24px;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    font-weight: 600;
+    color: #666;
+    transition: all 0.3s;
+}
+.tab.active{
+    color: #667eea;
+    border-bottom-color: #667eea;
+}
+.tab:hover{
+    color: #667eea;
+}
+.tab-content{
+    display: none;
+    animation: fadeIn 0.5s ease-in;
+}
+.tab-content.active{
+    display: block;
+}
+.form-group{
+    margin-bottom: 20px;
+}
+.form-group label{
+    display: block;
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: #555;
+}
+.form-group select, .form-group textarea{
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-size: 14px;
+    box-sizing: border-box;
+    transition: all 0.3s;
+}
+.form-group select:focus, .form-group textarea:focus{
+    border-color: #667eea;
+    outline: none;
+}
+textarea{
+    min-height: 150px;
+    font-family: monospace;
+    resize: vertical;
+}
+.file-drop-zone{
+    border: 3px dashed #ddd;
+    border-radius: 12px;
+    padding: 40px;
+    text-align: center;
+    background: #f9f9fb;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+.file-drop-zone:hover{
+    border-color: #667eea;
+    background: #f0f4ff;
+}
+.file-drop-zone.dragover{
+    border-color: #667eea;
+    background: #e8f0ff;
+    transform: scale(1.02);
+}
+.drop-icon{
+    font-size: 64px;
+    margin-bottom: 15px;
+}
+.drop-text{
+    font-size: 16px;
+    color: #666;
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+.drop-hint{
+    font-size: 13px;
+    color: #999;
+}
+.file-list{
+    margin-top: 20px;
+}
+.file-item{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px;
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    transition: all 0.3s;
+    animation: slideIn 0.3s ease-out;
+}
+.file-item:hover{
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+.file-name{
+    font-weight: 600;
+    color: #333;
+}
+.file-size{
+    font-size: 12px;
+    color: #666;
+}
+.remove-file{
+    background: #e74c3c;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: all 0.3s;
+}
+.remove-file:hover{
+    background: #c0392b;
+    transform: scale(1.05);
+}
+.results-grid{
+    display: grid;
+    gap: 20px;
+    margin-top: 20px;
+}
+.result-card{
+    background: #f9f9fb;
+    padding: 20px;
+    border-radius: 10px;
+    border-left: 4px solid #667eea;
+    transition: all 0.3s;
+    animation: fadeIn 0.5s ease-in;
+}
+.result-card:hover{
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+.result-card.error{
+    border-left-color: #e74c3c;
+}
+.result-header{
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    margin-bottom: 15px;
+}
+.result-title{
+    font-weight: 600;
+    color: #333;
+    font-size: 18px;
+}
+.result-index{
+    background: #667eea;
+    color: white;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+}
+.result-summary{
+    color: #666;
+    line-height: 1.6;
+    font-size: 14px;
+}
+.alert{
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-size: 14px;
+}
+.alert-success{
+    background: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+.alert-error{
+    background: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+.stats-summary{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 15px;
+    margin: 20px 0;
+    padding: 20px;
+    background: #f0f4ff;
+    border-radius: 10px;
+    transition: background 0.3s;
+}
+.stat-item{
+    text-align: center;
+}
+.stat-number{
+    font-size: 32px;
+    font-weight: bold;
+    color: #667eea;
+}
+.stat-label{
+    font-size: 13px;
+    color: #666;
+    margin-top: 5px;
+}
+.dark-mode-toggle{
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    color: white;
+    font-size: 28px;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    transition: transform 0.3s;
+    z-index: 1000;
+}
+.dark-mode-toggle:hover{
+    transform: scale(1.1);
+}
+@keyframes fadeIn{
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+@keyframes slideIn{
+    from { transform: translateX(-20px); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+@media (max-width: 768px){
+    body{
+        padding: 20px;
+    }
+    .container{
+        padding: 20px;
+    }
+    .header{
+        flex-direction: column;
+        gap: 15px;
+    }
+    .tabs{
+        flex-direction: column;
+    }
+    .stats-summary{
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+</style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>🔄 Batch Processing</h1>
+        <div class="nav-links">
+            <a href="{{ url_for('home') }}" class="btn btn-secondary">← Back</a>
+            {% if current_user.is_authenticated %}
+            <a href="{{ url_for('history') }}" class="btn btn-primary">📚 History</a>
+            <a href="{{ url_for('collections') }}" class="btn btn-secondary">📂 Collections</a>
+            {% endif %}
+        </div>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <!-- Tabs -->
+    <div class="tabs">
+        <div class="tab active" onclick="switchTab('urls')">🌐 Multiple URLs</div>
+        <div class="tab" onclick="switchTab('files')">📁 Multiple Files</div>
+    </div>
+
+    <!-- URL Tab -->
+    <div id="urls-tab" class="tab-content active">
+        <form method="post" action="{{ url_for('batch_process_urls') }}">
+            <div class="form-group">
+                <label>Analysis Settings</label>
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px;">
+                    <select name="mode">
+                        <option value="llm">🤖 AI Summary</option>
+                        <option value="nlp">⚡ Fast Summary</option>
+                    </select>
+                    <select name="summary_format">
+                        <option value="bullets">📝 Bullets</option>
+                        <option value="qa">❓ Q&A</option>
+                        <option value="timeline">⏱️ Timeline</option>
+                        <option value="insights">💡 Insights</option>
+                    </select>
+                    <select name="summary_length">
+                        <option value="short">Short</option>
+                        <option value="long">Long</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Enter URLs (one per line, max 10)</label>
+                <textarea name="urls" placeholder="https://example.com/article1
+https://example.com/article2
+https://example.com/article3"></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%; padding: 15px;">
+                🚀 Process URLs
+            </button>
+        </form>
+    </div>
+
+    <!-- Files Tab -->
+    <div id="files-tab" class="tab-content">
+        <form method="post" action="{{ url_for('batch_process_files') }}" enctype="multipart/form-data" id="batch-form">
+            <div class="form-group">
+                <label>Analysis Settings</label>
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px;">
+                    <select name="mode">
+                        <option value="llm">🤖 AI Summary</option>
+                        <option value="nlp">⚡ Fast Summary</option>
+                    </select>
+                    <select name="summary_format">
+                        <option value="bullets">📝 Bullets</option>
+                        <option value="qa">❓ Q&A</option>
+                        <option value="timeline">⏱️ Timeline</option>
+                        <option value="insights">💡 Insights</option>
+                    </select>
+                    <select name="summary_length">
+                        <option value="short">Short</option>
+                        <option value="long">Long</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Upload Files (max 10 files, 10MB each)</label>
+                <div class="file-drop-zone" id="dropZone">
+                    <div class="drop-icon">📤</div>
+                    <div class="drop-text">Drag & Drop files here</div>
+                    <div class="drop-hint">or click to browse (PDF, DOCX, PPTX, XLSX, Images)</div>
+                    <input type="file" id="fileInput" name="files" multiple 
+                           accept=".pdf,.docx,.doc,.pptx,.ppt,.xlsx,.xls,.png,.jpg,.jpeg,.gif,.bmp,.tiff"
+                           style="display: none;">
+                </div>
+                
+                <div id="fileList" class="file-list"></div>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%; padding: 15px;" id="submitBtn">
+                🚀 Process Files
+            </button>
+        </form>
+    </div>
+
+    <!-- Results Section -->
+    {% if batch_results %}
+    <div style="margin-top: 40px;">
+        <div class="header">
+            <h2>📊 Batch Results</h2>
+            <div style="display: flex; gap: 10px;">
+                <a href="{{ url_for('export_batch_results', format='pdf') }}" class="btn btn-primary">📥 Download All (PDF)</a>
+                <a href="{{ url_for('export_batch_results', format='json') }}" class="btn btn-secondary">📥 Download All (JSON)</a>
+            </div>
+        </div>
+
+        <!-- Stats Summary -->
+        <div class="stats-summary">
+            <div class="stat-item">
+                <div class="stat-number">{{ batch_results|length }}</div>
+                <div class="stat-label">Total Processed</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">{{ batch_results|selectattr('error', 'undefined')|list|length }}</div>
+                <div class="stat-label">Successful</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">{{ batch_results|selectattr('error', 'defined')|list|length }}</div>
+                <div class="stat-label">Failed</div>
+            </div>
+        </div>
+
+        <!-- Results Grid -->
+        <div class="results-grid">
+            {% for result in batch_results %}
+            <div class="result-card {% if result.error %}error{% endif %}">
+                <div class="result-header">
+                    <div>
+                        <span class="result-index">#{{ result.index }}</span>
+                        <span class="result-title">{{ result.title or result.source }}</span>
+                    </div>
+                </div>
+
+                {% if result.error %}
+                    <div style="color: #e74c3c; margin-top: 10px;">
+                        ❌ {{ result.error }}
+                    </div>
+                {% else %}
+                    <div class="result-summary">
+                        <strong>Source:</strong> {{ result.source }}<br>
+                        <strong>Method:</strong> {{ result.method }}<br>
+                        <strong>Confidence:</strong> {{ result.confidence_score }}<br>
+                        
+                        {% if result.analysis %}
+                        <strong>Reading Time:</strong> {{ result.analysis.reading_time.reading_time }}<br>
+                        <strong>Sentiment:</strong> {{ result.analysis.sentiment.sentiment }} {{ result.analysis.sentiment.emoji }}
+                        {% endif %}
+                    </div>
+
+                    {% if result.detailed_summary %}
+                    <details style="margin-top: 15px;">
+                        <summary style="cursor: pointer; font-weight: 600; color: #667eea; padding: 10px 0;">📄 View Summary</summary>
+                        <ul style="margin-top: 10px; padding-left: 20px;">
+                            {% for item in result.detailed_summary %}
+                            <li style="margin: 8px 0; color: #333;">{{ item }}</li>
+                            {% endfor %}
+                        </ul>
+                    </details>
+                    {% endif %}
+
+                    {% if result.qa_format %}
+                    <details style="margin-top: 15px;">
+                        <summary style="cursor: pointer; font-weight: 600; color: #667eea; padding: 10px 0;">❓ View Q&A</summary>
+                        <div style="margin-top: 10px;">
+                            {% for qa in result.qa_format %}
+                            <div style="margin: 10px 0;">
+                                <div style="font-weight: 600; color: #667eea;">Q: {{ qa.question }}</div>
+                                <div style="color: #333; margin-top: 5px;">A: {{ qa.answer }}</div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </details>
+                    {% endif %}
+
+                    {% if result.insights %}
+                    <details style="margin-top: 15px;">
+                        <summary style="cursor: pointer; font-weight: 600; color: #667eea; padding: 10px 0;">💡 View Insights</summary>
+                        <ul style="margin-top: 10px; padding-left: 20px;">
+                            {% for insight in result.insights %}
+                            <li style="margin: 8px 0; color: #333;">{{ insight }}</li>
+                            {% endfor %}
+                        </ul>
+                    </details>
+                    {% endif %}
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Dark Mode Toggle -->
+<button class="dark-mode-toggle" onclick="toggleDarkMode()">
+    <span id="darkModeIcon">🌙</span>
+</button>
+
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+<script>
+// Tab switching
+function switchTab(tabName) {
+    // Remove active from all tabs
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    
+    // Add active to clicked tab
+    event.target.classList.add('active');
+    document.getElementById(tabName + '-tab').classList.add('active');
+}
+
+// File upload handling
+const dropZone = document.getElementById('dropZone');
+const fileInput = document.getElementById('fileInput');
+const fileList = document.getElementById('fileList');
+let selectedFiles = [];
+
+if (dropZone && fileInput) {
+    dropZone.addEventListener('click', () => fileInput.click());
+
+    dropZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropZone.classList.add('dragover');
+    });
+
+    dropZone.addEventListener('dragleave', () => {
+        dropZone.classList.remove('dragover');
+    });
+
+    dropZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropZone.classList.remove('dragover');
+        handleFiles(e.dataTransfer.files);
+    });
+
+    fileInput.addEventListener('change', (e) => {
+        handleFiles(e.target.files);
+    });
+}
+
+function handleFiles(files) {
+    selectedFiles = Array.from(files).slice(0, 10); // Max 10 files
+    displayFileList();
+}
+
+function displayFileList() {
+    fileList.innerHTML = '';
+    
+    if (selectedFiles.length === 0) {
+        return;
+    }
+    
+    selectedFiles.forEach((file, index) => {
+        const fileItem = document.createElement('div');
+        fileItem.className = 'file-item';
+        
+        const fileInfo = document.createElement('div');
+        fileInfo.innerHTML = `
+            <div class="file-name">📄 ${file.name}</div>
+            <div class="file-size">${(file.size / 1024).toFixed(2)} KB</div>
+        `;
+        
+        const removeBtn = document.createElement('button');
+        removeBtn.className = 'remove-file';
+        removeBtn.textContent = 'Remove';
+        removeBtn.type = 'button';
+        removeBtn.onclick = () => {
+            selectedFiles.splice(index, 1);
+            displayFileList();
+            updateFileInput();
+        };
+        
+        fileItem.appendChild(fileInfo);
+        fileItem.appendChild(removeBtn);
+        fileList.appendChild(fileItem);
+    });
+}
+
+function updateFileInput() {
+    const dataTransfer = new DataTransfer();
+    selectedFiles.forEach(file => dataTransfer.items.add(file));
+    if (fileInput) {
+        fileInput.files = dataTransfer.files;
+    }
+}
+</script>
+</body>
+</html>

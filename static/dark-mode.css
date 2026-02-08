@@ -1,0 +1,222 @@
+/* Dark Mode Styles */
+body.dark-mode {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+}
+
+.dark-mode .container {
+    background: #1e1e1e;
+    color: #e0e0e0;
+}
+
+.dark-mode h1, .dark-mode h2, .dark-mode h3 {
+    color: #e0e0e0;
+}
+
+.dark-mode .subtitle, .dark-mode .user-status, .dark-mode .stat-label {
+    color: #b0b0b0;
+}
+
+.dark-mode .top-nav {
+    background: #2a2a2a;
+}
+
+.dark-mode .username, .dark-mode .metadata-label, .dark-mode .stat-label {
+    color: #b0b0b0;
+}
+
+.dark-mode .nav-btn-secondary {
+    background: #2a2a2a;
+    color: #e0e0e0;
+}
+
+.dark-mode .nav-btn-secondary:hover {
+    background: #3a3a3a;
+}
+
+.dark-mode .form-group label {
+    color: #b0b0b0;
+}
+
+.dark-mode .form-group select,
+.dark-mode .form-group input[type="text"],
+.dark-mode .form-group textarea,
+.dark-mode .filter-group select,
+.dark-mode .filter-group input {
+    background: #2a2a2a;
+    border-color: #3a3a3a;
+    color: #e0e0e0;
+}
+
+.dark-mode .file-upload-box {
+    background: #2a2a2a;
+    border-color: #3a3a3a;
+}
+
+.dark-mode .file-upload-box:hover {
+    background: #3a3a3a;
+    border-color: #667eea;
+}
+
+.dark-mode .file-upload-label, .dark-mode .file-upload-hint {
+    color: #b0b0b0;
+}
+
+.dark-mode .card {
+    background: #2a2a2a;
+    border-left-color: #667eea;
+}
+
+.dark-mode .analysis-card {
+    background: #1e1e1e;
+}
+
+.dark-mode .sentiment-box,
+.dark-mode .language-info,
+.dark-mode .readability-score {
+    background: #2a2a2a;
+}
+
+.dark-mode .metadata-section {
+    background: #2a2a2a;
+}
+
+.dark-mode .metadata-value {
+    color: #e0e0e0;
+}
+
+.dark-mode .stat-item {
+    border-bottom-color: #3a3a3a;
+}
+
+.dark-mode .stat-value {
+    color: #e0e0e0;
+}
+
+.dark-mode .topic-item {
+    background: #2a2a2a;
+}
+
+.dark-mode .qa-item {
+    background: #1e1e1e;
+}
+
+.dark-mode .qa-question {
+    color: #8b9eff;
+}
+
+.dark-mode .qa-answer, .dark-mode .timeline-description, .dark-mode .insight-text {
+    color: #b0b0b0;
+}
+
+.dark-mode .insight-item {
+    background: #2a2a2a;
+}
+
+.dark-mode .chat-section {
+    background: #1e1e1e;
+}
+
+.dark-mode .suggested-questions {
+    background: #2a2a2a;
+}
+
+.dark-mode .question-chip {
+    background: #1e1e1e;
+    border-color: #667eea;
+    color: #8b9eff;
+}
+
+.dark-mode .question-chip:hover {
+    background: #667eea;
+    color: white;
+}
+
+.dark-mode .chat-messages {
+    background: #1e1e1e;
+}
+
+.dark-mode .chat-message.assistant .message-content {
+    background: #2a2a2a;
+    color: #e0e0e0;
+}
+
+.dark-mode .chat-input-area {
+    background: #2a2a2a;
+}
+
+.dark-mode .chat-input {
+    background: #1e1e1e;
+    border-color: #3a3a3a;
+    color: #e0e0e0;
+}
+
+.dark-mode .filters-section {
+    background: #2a2a2a;
+}
+
+.dark-mode .history-item {
+    background: #2a2a2a;
+}
+
+.dark-mode .history-item.favorite {
+    background: #2a2215;
+}
+
+.dark-mode .history-title, .dark-mode .result-title {
+    color: #e0e0e0;
+}
+
+.dark-mode .dropdown-content {
+    background: #2a2a2a;
+}
+
+.dark-mode .dropdown-content a {
+    color: #e0e0e0;
+    border-bottom-color: #3a3a3a;
+}
+
+.dark-mode .dropdown-content a:hover {
+    background: #3a3a3a;
+}
+
+.dark-mode .modal-content {
+    background: #1e1e1e;
+}
+
+.dark-mode .modal-header h2 {
+    color: #e0e0e0;
+}
+
+.dark-mode .result-card {
+    background: #2a2a2a;
+}
+
+.dark-mode .result-summary {
+    color: #b0b0b0;
+}
+
+.dark-mode .file-item {
+    background: #1e1e1e;
+    border-color: #3a3a3a;
+}
+
+.dark-mode .file-name {
+    color: #e0e0e0;
+}
+
+.dark-mode .collection-card {
+    background: #2a2a2a;
+}
+
+.dark-mode .collection-name {
+    color: #e0e0e0;
+}
+
+.dark-mode .collection-description {
+    color: #b0b0b0;
+}
+
+.dark-mode .collection-stats {
+    color: #b0b0b0;
+    border-top-color: #3a3a3a;
+}

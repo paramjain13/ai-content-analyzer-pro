@@ -1,4 +1,4 @@
-# 🚀 AI Content Analyzer Pro
+# AI Content Analyzer Pro
 
 <div align="center">
 
@@ -15,11 +15,11 @@
 
 ---
 
-## 📋 Overview
+## Overview
 
 AI Content Analyzer Pro is an enterprise-grade web application that leverages cutting-edge AI technologies to extract, analyze, and summarize content from multiple sources including websites, PDFs, Word documents, PowerPoints, Excel files, and images. Built with scalability and user experience in mind, it features a RAG (Retrieval-Augmented Generation) system for intelligent document Q&A.
 
-### 🎯 Key Highlights
+### Key Highlights
 
 - **Multi-format Support**: Process PDFs, DOCX, PPTX, XLSX, and images
 - **AI-Powered Analysis**: Utilizes GPT-4 and Google's Gemini models
@@ -30,28 +30,28 @@ AI Content Analyzer Pro is an enterprise-grade web application that leverages cu
 - **Export Options**: PDF, DOCX, Markdown, and JSON export formats
 - **Conversational Q&A**: Chat with your documents using advanced NLP
 
-## ✨ Features
+## Features
 
-### 🔍 Content Analysis
+### Content Analysis
 - **Website Scraping**: Extract and summarize content from any public URL
 - **Multi-Document Support**: Process PDFs, Word docs, PowerPoints, spreadsheets, and images
 - **OCR Integration**: Extract text from images using Tesseract
 - **Smart Summarization**: Multiple AI models with fallback mechanisms
 - **Customizable Output**: Choose summary length and format (paragraph, bullet points, detailed)
 
-### 💬 RAG & Chat System
+### RAG & Chat System
 - **Semantic Search**: ChromaDB vector database for intelligent document retrieval
 - **Conversational Interface**: Ask questions about your documents in natural language
 - **Context-Aware Responses**: Leverages document embeddings for accurate answers
 - **Multi-Model Support**: OpenAI GPT-4 and Google Gemini integration
 
-### 👤 User Management
+### User Management
 - **Secure Authentication**: BCrypt password hashing
 - **Session Management**: Flask-Login integration
 - **User-Specific Content**: Private document collections per user
 - **Analysis History**: Track all your document analyses
 
-### 📊 Organization & Export
+### Organization & Export
 - **Collections**: Create custom collections to organize related documents
 - **Tagging System**: Add notes and categorize analyses
 - **Multiple Export Formats**: 
@@ -61,13 +61,13 @@ AI Content Analyzer Pro is an enterprise-grade web application that leverages cu
   - JSON for data processing
 - **Batch Operations**: Process multiple files simultaneously
 
-### 🎨 Modern UI/UX
+### Modern UI/UX
 - **Responsive Design**: Mobile-friendly interface
 - **Dark Mode**: Eye-friendly dark theme
 - **Real-time Feedback**: Progress indicators and status updates
 - **Intuitive Navigation**: Clean, professional interface
 
-## 🛠 Tech Stack
+## Tech Stack
 
 ### Backend
 - **Framework**: Flask 3.0+
@@ -96,7 +96,7 @@ AI Content Analyzer Pro is an enterprise-grade web application that leverages cu
 - **JavaScript**: Vanilla JS for interactivity
 - **UI Components**: Custom-built components
 
-## 📦 Installation
+## Installation
 
 ### Prerequisites
 - Python 3.8 or higher
@@ -162,7 +162,7 @@ python app.py
 http://localhost:5000
 ```
 
-## 🎮 Usage
+## Usage
 
 ### Basic Workflow
 
@@ -187,7 +187,7 @@ http://localhost:5000
 2. Create an API key
 3. Add to `.env`: `GOOGLE_API_KEY=...`
 
-## 🏗 Architecture
+## Architecture
 
 ```
 ai-content-analyzer-pro/
@@ -235,7 +235,7 @@ ai-content-analyzer-pro/
     └── dark-mode.css
 ```
 
-## 🔒 Security Features
+## Security Features
 
 - **Password Hashing**: BCrypt with salt rounds
 - **Session Management**: Secure Flask sessions
@@ -244,7 +244,7 @@ ai-content-analyzer-pro/
 - **XSS Protection**: Template escaping
 - **Environment Variables**: Sensitive data in .env
 
-## 🚀 Performance
+## Performance
 
 - **Async Operations**: Non-blocking document processing
 - **Caching**: Vector embeddings cached in ChromaDB
@@ -252,7 +252,7 @@ ai-content-analyzer-pro/
 - **Optimized Queries**: Indexed database operations
 - **Smart Chunking**: Efficient text splitting for large documents
 
-## 📈 Roadmap
+## Roadmap
 
 - [ ] PostgreSQL migration for production
 - [ ] Docker containerization
@@ -264,7 +264,7 @@ ai-content-analyzer-pro/
 - [ ] Multi-language support
 - [ ] Mobile app (React Native)
 
-## 🤝 Contributing
+## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request. For major changes, please open an issue first to discuss what you would like to change.
 
@@ -274,18 +274,18 @@ Contributions are welcome! Please feel free to submit a Pull Request. For major 
 4. Push to the branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
-## 📝 License
+## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 👨‍💻 Author
+## Author
 
 **Your Name**
 - GitHub: [paramjain13](https://github.com/paramjain13)
 - LinkedIn: [Param Jain](https://www.linkedin.com/in/paramsachinjain/)
 - Email: jain.param@northeastern.edu
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
 - OpenAI for GPT-4 API
 - Google for Gemini AI
@@ -295,11 +295,3 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 
 
-**⭐ Star this repository if you find it helpful!**
-
-Made with ❤️ and AI
-
-</div>
-# ai-content-analyzer-pro
-# ai-content-analyzer-pro
-# ai-content-analyzer-pro

@@ -293,23 +293,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - Flask community for the excellent framework
 - All open-source contributors
 
-## 📸 Screenshots
 
-### Main Dashboard
-![Dashboard](docs/screenshots/dashboard.png)
-
-### Document Analysis
-![Analysis](docs/screenshots/analysis.png)
-
-### Chat Interface
-![Chat](docs/screenshots/chat.png)
-
-### Collections
-![Collections](docs/screenshots/collections.png)
-
----
-
-<div align="center">
 
 **⭐ Star this repository if you find it helpful!**
 
